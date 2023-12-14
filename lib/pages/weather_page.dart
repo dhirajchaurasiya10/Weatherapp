@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:weatherapp/services/weather_services.dart';
 
 import '../models/weather_model.dart';
@@ -35,6 +36,30 @@ class _WeatherPageState extends State<WeatherPage> {
   }
 
   //weather animations
+  String getWeatherAnimation(String? mainCondition) {
+    if (mainCondition == null) return 'assets/sunny.json';
+
+    switch (mainCondition.toLowerCase()) {
+      case 'clouds':
+      case 'mist':
+      case 'smoke':
+      case 'haze':
+      case 'dust':
+      case 'fog':
+        return 'assets/cloud.json';
+      case 'rain':
+      case 'drizzle':
+      case 'shower rain':
+        return 'assets/rain.json';
+      case 'thunderstorm':
+        return 'asstes/thunder.json';
+      case 'clear':
+        return 'assets/sunny.json';
+      default:
+        return 'assets/sunny.json';
+    }
+    ;
+  }
 
   //init state
   @override
@@ -47,15 +72,26 @@ class _WeatherPageState extends State<WeatherPage> {
 
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          //city name
-          Text(_weather?.cityname ?? "Loading city.."),
+      backgroundColor: Colors.grey,
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            //city name
+            Text(_weather?.cityname ?? "Loading city.."),
 
-          //temperature
-          Text('${_weather?.temperature.round()}C')
-        ],
+            //animation
+            Lottie.asset(getWeatherAnimation(_weather?.mainCondition)),
+
+            //temperature
+            Text(
+                '${_weather?.temperature.round()}°C'), //to display degree press Alt+0176
+
+            //weather condition
+            Text(_weather?.mainCondition ?? ""),
+          ],
+        ),
       ),
     );
   }
